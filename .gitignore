@@ -1,0 +1,24 @@
+# Python virtual environments
+
+.venv/
+.venv-*/
+
+# Python cache files
+
+**pycache**/
+*.py[cod]
+
+# Test and coverage artifacts
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment variables and secrets
+
+.env
+.env.*
+
+# IDE settings
+
+.vscode/
