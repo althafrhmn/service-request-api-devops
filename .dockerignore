@@ -1,0 +1,11 @@
+.venv/
+.venv-*/
+pycache/
+.py[cod]
+.pytest_cache/
+.git/
+.github/
+tests/
+.env
+.env.
+.vscode/
