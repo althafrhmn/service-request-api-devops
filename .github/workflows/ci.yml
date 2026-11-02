@@ -12,24 +12,35 @@ permissions:
   contents: read
 
 jobs:
- test:
-   name: Run Python Tests
-   runs-on: ubuntu-latest
+  test:
+    name: Run Python Tests
+    runs-on: ubuntu-latest
 
-   steps:
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-    - name: Check out repository
-      uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r requirements.txt
+      - name: Run automated tests
+        run: python -m pytest -v
 
-    - name: Run automated tests
-      run: python -m pytest -v
+      - name: Build Docker image
+        run: docker build -t service-request-api:${{ github.sha }} .
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: service-request-api:${{ github.sha }}
+          format: table
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
