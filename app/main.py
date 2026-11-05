@@ -5,11 +5,16 @@ from itertools import count
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, Field
 
+from prometheus_fastapi_instrumentator import Instrumentator
+
 app = FastAPI(
 title="Service Request Management API",
 description="An API for creating and managing service requests.",
 version="1.0.0",
 )
+
+Instrumentator().instrument(app).expose(app)
+
 
 class Priority(str, Enum):
     low = "Low"
