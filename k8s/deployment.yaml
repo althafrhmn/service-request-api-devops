@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-request-api
+  labels:
+    app: service-request-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-request-api
+  template:
+    metadata:
+      labels:
+        app: service-request-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/althafrhmn/service-request-api-devops:529a1c8b15b798a11dfa82e6ce711856a21245b5
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
