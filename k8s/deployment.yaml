@@ -13,10 +13,14 @@ spec:
     metadata:
       labels:
         app: service-request-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: api
-          image: ghcr.io/althafrhmn/service-request-api-devops:529a1c8b15b798a11dfa82e6ce711856a21245b5
+          image: ghcr.io/althafrhmn/service-request-api-devops:7e154e58284b9f10859e8be0f354af6114aa3b9e
           ports:
             - containerPort: 8000
           readinessProbe:
