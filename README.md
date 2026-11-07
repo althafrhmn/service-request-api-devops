@@ -75,10 +75,10 @@ The pipeline fails only on fixable HIGH/CRITICAL vulnerabilities
 
 ## Roadmap
 
-- [ ] Prometheus and Grafana monitoring
-- [ ] Deploy to Kubernetes from the pipeline
-- [ ] Persistent storage (database) before scaling beyond 1 replica
-- [ ] Separate dev dependencies (pytest) from the runtime image
+- [x] Prometheus and Grafana monitoring
+- [] Deploy to Kubernetes from the pipeline
+- [] Persistent storage (database) before scaling beyond 1 replica
+- [] Separate dev dependencies (pytest) from the runtime image
 
 ## Monitoring (Prometheus and Grafana)
 
