@@ -79,3 +79,29 @@ The pipeline fails only on fixable HIGH/CRITICAL vulnerabilities
 - [ ] Deploy to Kubernetes from the pipeline
 - [ ] Persistent storage (database) before scaling beyond 1 replica
 - [ ] Separate dev dependencies (pytest) from the runtime image
+
+## Monitoring (Prometheus and Grafana)
+
+The app exposes `/metrics` using `prometheus-fastapi-instrumentator`.
+Pod annotations in `k8s/deployment.yaml` tell Prometheus to scrape it.
+
+Install on Minikube with Helm:
+
+    kubectl create namespace monitoring
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo add grafana https://grafana.github.io/helm-charts
+    helm install prometheus prometheus-community/prometheus -n monitoring --set alertmanager.enabled=false --set prometheus-pushgateway.enabled=false --set kube-state-metrics.enabled=false --set prometheus-node-exporter.enabled=false --set server.persistentVolume.enabled=false
+    helm install grafana grafana/grafana -n monitoring --set persistence.enabled=false --set adminPassword=<choose-a-password>
+
+Open Grafana:
+
+    kubectl port-forward -n monitoring svc/grafana 3000:80
+
+Add a Prometheus data source with the URL
+`http://prometheus-server.monitoring.svc.cluster.local`, then build charts with:
+
+    sum(rate(http_requests_total[5m])) by (handler)
+    sum(rate(http_request_duration_seconds_sum[5m])) by (handler) / sum(rate(http_request_duration_seconds_count[5m])) by (handler)
+
+Limits: Prometheus and Grafana run without persistent storage, so data and
+dashboards are lost when their pods restart. There are no alerts yet.
